@@ -13,57 +13,65 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.psi.entity.Department;
+import com.psi.entity.Employee;
 import com.psi.repository.DepartmentRepository;
+import com.psi.repository.EmployeeRepository;
 
 @Controller
-@RequestMapping("/department")
-public class DepartmentController {
+@RequestMapping("/employee")
+public class EmployeeController {
 	
 	@Autowired
 	private DepartmentRepository departmentRepository;
 	
-	// 部門維護首頁
+	@Autowired
+	private EmployeeRepository employeeRepository;
+	
+	// 員工維護首頁
 	@GetMapping("/")
-	public String index(@ModelAttribute Department department,  Model model) {
+	public String index(@ModelAttribute Employee employee,  Model model) {
 		model.addAttribute("_method", "POST");
+		model.addAttribute("employees", employeeRepository.findAll());
 		model.addAttribute("departments", departmentRepository.findAll());
-		return "department";
+		return "employee";
 	}
 	
 	@GetMapping("/{id}")
 	public String get(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("_method", "PUT");
-		model.addAttribute("department", departmentRepository.getById(id));
+		model.addAttribute("employee", employeeRepository.getById(id));
+		model.addAttribute("employees", employeeRepository.findAll());
 		model.addAttribute("departments", departmentRepository.findAll());
-		return "department";
+		return "employee";
 	}
 	
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable("id") Long id) {
-		departmentRepository.deleteById(id);
+		employeeRepository.deleteById(id);
 		return "redirect:../";
 	}
 	
 	@PostMapping("/")
-	public String add(@Valid @ModelAttribute Department department, BindingResult result, Model model) {
+	public String add(@Valid @ModelAttribute Employee employee, BindingResult result, Model model) {
 		if(result.hasErrors()) {
 			model.addAttribute("_method", "POST");
+			model.addAttribute("employees", employeeRepository.findAll());
 			model.addAttribute("departments", departmentRepository.findAll());
-			return "department";
+			return "employee";
 		}
-		departmentRepository.save(department);
+		employeeRepository.save(employee);
 		return "redirect:./";
 	}
 	
 	@PutMapping("/")
-	public String update(@Valid @ModelAttribute Department department, BindingResult result, Model model) {
+	public String update(@Valid @ModelAttribute Employee employee, BindingResult result, Model model) {
 		if(result.hasErrors()) {
-			model.addAttribute("_method", "PUT");
+			model.addAttribute("_method", "POST");
+			model.addAttribute("employees", employeeRepository.findAll());
 			model.addAttribute("departments", departmentRepository.findAll());
-			return "department";
+			return "employee";
 		}
-		departmentRepository.save(department);
+		employeeRepository.save(employee);
 		return "redirect:./";
 	}
 	
