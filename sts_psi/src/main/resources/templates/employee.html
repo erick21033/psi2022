@@ -29,7 +29,8 @@
 			  			th:field="*{department.id}">
 			  		<option th:each="d:${departments}" 
 			  				th:value="${d.id}"
-			  				th:text="${d.name}" />
+			  				th:text="${d.name}"
+			  				th:selected="(${d.id} eq (*{department.id}?:0))" />
 			  	</select>
 			  			
 			  </div>
